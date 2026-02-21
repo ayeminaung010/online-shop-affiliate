@@ -6,9 +6,9 @@ export async function GET(request, { params }) {
     const supabase = getSupabase();
     const { data: product, error } = await supabase
       .from('products')
-      .select('id, platform, affiliate_url, active')
+      .select('id, platform, affiliate_url, status')
       .eq('id', params.id)
-      .eq('active', true)
+      .in('status', ['active', 'need_recheck'])
       .single();
 
     if (error || !product) return new Response('Link not found', { status: 404 });
@@ -18,7 +18,7 @@ export async function GET(request, { params }) {
       product: { id: product.id, platform: product.platform },
       source: url.searchParams.get('source') || 'direct',
       campaign: url.searchParams.get('campaign') || '',
-      ua: request.headers.get('user-agent') || ''
+      ua: request.headers.get('user-agent') || '',
     });
 
     return Response.redirect(product.affiliate_url, 302);

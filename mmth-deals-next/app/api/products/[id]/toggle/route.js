@@ -2,7 +2,8 @@ import { isAuthorized, toggleProduct } from '@/lib/store';
 
 export async function PATCH(request, { params }) {
   try {
-    if (!isAuthorized(request)) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    const authed = await isAuthorized(request);
+    if (!authed) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     const product = await toggleProduct(params.id);
     return Response.json(product);

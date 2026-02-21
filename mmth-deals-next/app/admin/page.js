@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShieldCheck, Package, PlusCircle, LogOut, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, Package, PlusCircle, LogOut, AlertTriangle, MousePointerClick } from 'lucide-react';
 import { getSupabaseBrowser } from '@/lib/supabase-browser';
 import { t } from '@/lib/i18n/my';
 
@@ -71,7 +71,7 @@ export default function AdminDashboard() {
         <Button
           variant="outline"
           onClick={handleLogout}
-          className="border-white/30 text-white hover:bg-white/10 min-h-[44px]"
+          className="border-white/30 text-white bg-white/10 hover:bg-white/10 min-h-[44px]"
         >
           <LogOut className="w-4 h-4 mr-2" />
           {t('auth.logout')}
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
       )}
 
       {/* Navigation Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Link href="/admin/products">
           <Card className="p-6 flex items-center gap-4 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all cursor-pointer border-border hover:border-primary">
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
@@ -133,6 +133,18 @@ export default function AdminDashboard() {
             <div>
               <h3 className="font-bold text-lg">{t('admin.nav.addProduct')}</h3>
               <p className="text-sm text-muted-foreground">Deal အသစ်ထည့်မည်</p>
+            </div>
+          </Card>
+        </Link>
+
+        <Link href="/admin/clicks">
+          <Card className="p-6 flex items-center gap-4 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all cursor-pointer border-border hover:border-primary">
+            <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center shrink-0">
+              <MousePointerClick className="w-6 h-6 text-amber-600" />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg">Click Logs</h3>
+              <p className="text-sm text-muted-foreground">လင့်ခ်နှိပ်ခြင်း မှတ်တမ်းကြည့်မည်</p>
             </div>
           </Card>
         </Link>

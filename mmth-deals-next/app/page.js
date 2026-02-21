@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
-import { ShieldCheck, TrendingUp, Image as ImageIcon, ExternalLink, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, TrendingUp, Image as ImageIcon, ExternalLink, AlertTriangle, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { t } from '@/lib/i18n/my';
 
 // Hero
@@ -111,16 +113,34 @@ export default function HomePage() {
   const [items, setItems] = useState([]);
   const [platform, setPlatform] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [searchInput, setSearchInput] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Debounce search
+  useEffect(() => {
+    const timer = setTimeout(() => setSearchQuery(searchInput), 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   async function load() {
+    setLoading(true);
     const qs = new URLSearchParams();
     if (platform) qs.set('platform', platform);
     if (maxPrice) qs.set('maxPrice', maxPrice);
     const res = await fetch('/api/products?' + qs.toString());
     setItems(await res.json());
+    setLoading(false);
   }
 
   useEffect(() => { load(); }, [platform, maxPrice]);
+
+  // Client-side search filter
+  const filtered = searchQuery
+    ? (Array.isArray(items) ? items : []).filter((p) =>
+      p.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    : (Array.isArray(items) ? items : []);
 
   return (
     <main className="w-full max-w-6xl mx-auto px-4 py-4 md:py-8">
@@ -128,18 +148,56 @@ export default function HomePage() {
       <TopDealsBanner />
       <FilterBar platform={platform} maxPrice={maxPrice} setPlatform={setPlatform} setMaxPrice={setMaxPrice} />
 
+      {/* Search Bar */}
+      <div className="relative mb-5">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+        <Input
+          placeholder="ထုတ်ကုန်အမည်ဖြင့် ရှာဖွေမည်..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          className="pl-10 h-12 text-base"
+        />
+      </div>
+
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {(Array.isArray(items) ? items : []).map((p) => {
+        {loading ? (
+          Array.from({ length: 8 }).map((_, i) => (
+            <Card key={i} className="flex flex-col overflow-hidden border-border animate-pulse">
+              <div className="w-full aspect-square md:aspect-[4/3] bg-muted" />
+              <CardContent className="p-4 flex flex-col gap-3">
+                <div className="flex justify-between">
+                  <div className="h-5 w-16 bg-muted rounded-full" />
+                  <div className="h-4 w-12 bg-muted rounded" />
+                </div>
+                <div className="h-4 w-full bg-muted rounded" />
+                <div className="h-4 w-3/4 bg-muted rounded" />
+                <div className="flex items-baseline gap-2 mt-auto">
+                  <div className="h-6 w-16 bg-muted rounded" />
+                  <div className="h-4 w-10 bg-muted rounded" />
+                </div>
+                <div className="h-10 w-full bg-muted rounded-md mt-2" />
+              </CardContent>
+            </Card>
+          ))
+        ) : filtered.length === 0 ? (
+          <div className="col-span-full py-16 text-center">
+            <div className="text-4xl mb-3">🔍</div>
+            <p className="text-muted-foreground font-medium">ထုတ်ကုန် ရှာမတွေ့ပါ</p>
+            <p className="text-muted-foreground text-sm mt-1">Filter ကို ပြောင်းကြည့်ပါ</p>
+          </div>
+        ) : filtered.map((p) => {
           const isShopee = p.platform === 'Shopee';
           return (
             <Card key={p.id} className="flex flex-col overflow-hidden hover:-translate-y-1 hover:shadow-lg transition-all duration-200 border-border hover:border-primary">
-              {p.imageUrl ? (
-                <img className="w-full aspect-square md:aspect-[4/3] object-cover bg-muted border-b border-border" src={p.imageUrl} alt={p.title} loading="lazy" />
-              ) : (
-                <div className="w-full aspect-square md:aspect-[4/3] bg-muted flex items-center justify-center text-muted-foreground border-b border-border">
-                  <ImageIcon className="w-8 h-8" />
-                </div>
-              )}
+              <Link href={`/products/${p.id}`} className="cursor-pointer">
+                {p.imageUrl ? (
+                  <img className="w-full aspect-square md:aspect-[4/3] object-cover bg-muted border-b border-border" src={p.imageUrl} alt={p.title} loading="lazy" />
+                ) : (
+                  <div className="w-full aspect-square md:aspect-[4/3] bg-muted flex items-center justify-center text-muted-foreground border-b border-border">
+                    <ImageIcon className="w-8 h-8" />
+                  </div>
+                )}
+              </Link>
 
               <CardContent className="p-4 flex flex-col flex-1 gap-3">
                 <div className="flex justify-between items-center mb-1">
@@ -154,7 +212,9 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <h2 className="font-semibold text-base leading-snug line-clamp-2 m-0">{p.title}</h2>
+                <Link href={`/products/${p.id}`} className="hover:text-primary transition-colors">
+                  <h2 className="font-semibold text-base leading-snug line-clamp-2 m-0">{p.title}</h2>
+                </Link>
 
                 <div className="flex items-baseline gap-2 mt-auto">
                   <span className="text-xl font-bold text-primary">฿{Number(p.price || 0).toLocaleString()}</span>

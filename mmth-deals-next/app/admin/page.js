@@ -1,25 +1,36 @@
 'use client';
 
 import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ShieldCheck } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Mock Stats Panel for the Executive Dashboard Feel
 function StatsPanel() {
   return (
-    <div className="admin-stats">
-      <div className="stat-card">
-        <span className="stat-label">လက်ရှိ Deals အရေအတွက်</span>
-        <span className="stat-value">2,845</span>
-      </div>
-      <div className="stat-card">
-        <span className="stat-label">Shopee vs Lazada</span>
-        <div className="flex items-center justify-between" style={{ marginTop: 'auto' }}>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+      <Card className="p-5 flex flex-col gap-1 shadow-sm">
+        <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">လက်ရှိ Deals အရေအတွက်</span>
+        <span className="text-3xl font-extrabold text-foreground">2,845</span>
+      </Card>
+      <Card className="p-5 flex flex-col gap-1 shadow-sm">
+        <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Shopee vs Lazada</span>
+        <div className="flex items-center justify-between mt-auto">
           <span className="text-sm font-semibold text-primary">64% / 36%</span>
         </div>
-      </div>
-      <div className="stat-card">
-        <span className="stat-label">ယနေ့ ခန့်မှန်းရောင်းချရမှု</span>
-        <span className="stat-value text-success" style={{ color: 'var(--success)' }}>+124</span>
-      </div>
+      </Card>
+      <Card className="p-5 flex flex-col gap-1 shadow-sm">
+        <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">ယနေ့ ခန့်မှန်းရောင်းချရမှု</span>
+        <span className="text-3xl font-extrabold text-green-600 dark:text-green-500">+124</span>
+      </Card>
     </div>
   );
 }
@@ -61,28 +72,24 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="container">
-      <header className="hero flex justify-between items-center" style={{ textAlign: 'left', padding: 'var(--space-6)' }}>
-        <div>
-          <div className="hero-trust" style={{ marginBottom: '12px' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-            </svg>
+    <main className="w-full max-w-6xl mx-auto px-4 py-4 md:py-8">
+      <header className="bg-gradient-to-br from-primary to-accent rounded-2xl text-white p-6 shadow-md relative flex flex-col md:flex-row justify-between items-center gap-4 text-left">
+        <div className="w-full md:w-auto">
+          <div className="inline-flex items-center gap-2 bg-white/15 px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm mb-3">
+            <ShieldCheck className="w-4 h-4" />
             <span>တာဝန်ရှိသူများသာ</span>
           </div>
-          <h1 style={{ fontSize: '2rem' }}>Deals ထိန်းချုပ်မှုစနစ်</h1>
+          <h1 className="text-3xl font-extrabold tracking-tight">Deals ထိန်းချုပ်မှုစနစ်</h1>
         </div>
 
-        <div style={{ width: '250px' }}>
-          <div className="input-group">
-            <input
+        <div className="w-full md:w-[250px] shrink-0">
+          <div className="flex flex-col gap-1.5">
+            <Input
               type="password"
-              className="input-field"
               placeholder="Admin Access Token"
               value={token}
               onChange={(e) => setToken(e.target.value)}
-              style={{ background: 'rgba(255,255,255,0.1)', color: 'white', borderColor: 'rgba(255,255,255,0.3)' }}
+              className="bg-white/10 border-white/30 text-white placeholder:text-white/60 focus-visible:ring-white"
             />
           </div>
         </div>
@@ -90,123 +97,119 @@ export default function AdminPage() {
 
       <StatsPanel />
 
-      <form className="admin-form" onSubmit={save}>
-        <div className="form-section">
-          <h2 className="form-section-title">ထုတ်ကုန် အချက်အလက်</h2>
-          <div className="form-grid">
-            <div className="input-group form-col-span-2">
-              <label className="input-label">ခေါင်းစဉ် / Deal အမည်</label>
-              <input
-                className="input-field"
-                placeholder="ထုတ်ကုန် အမည်ကို ထည့်ပါ"
-                value={form.title}
-                onChange={(e) => onChange('title', e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label className="input-label">E-commerce ပလက်ဖောင်း</label>
-              <select
-                className="input-field"
-                value={form.platform}
-                onChange={(e) => onChange('platform', e.target.value)}
-              >
-                <option value="Shopee">Shopee</option>
-                <option value="Lazada">Lazada</option>
-              </select>
-            </div>
-
-            <div className="input-group">
-              <label className="input-label">အမျိုးအစား (Category)</label>
-              <input
-                className="input-field"
-                placeholder="ဥပမာ- Electronics, Fashion"
-                value={form.category}
-                onChange={(e) => onChange('category', e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="form-section">
-          <h2 className="form-section-title">စျေးနှုန်းနှင့် တန်ဖိုး</h2>
-          <div className="form-grid">
-            <div className="input-group">
-              <label className="input-label">လက်ရှိ ရောင်းဈေး (฿)</label>
-              <input
-                className="input-field"
-                type="number"
-                min="0"
-                placeholder="0"
-                value={form.price}
-                onChange={(e) => onChange('price', Number(e.target.value))}
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label className="input-label">မူလစျေးနှုန်း (฿) - ဈေးဟောင်းပြသရန်</label>
-              <input
-                className="input-field"
-                type="number"
-                min="0"
-                placeholder="0"
-                value={form.oldPrice}
-                onChange={(e) => onChange('oldPrice', Number(e.target.value))}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="form-section">
-          <h2 className="form-section-title">ပုံနှင့် ပြင်ပလင့်ခ်များ</h2>
-          <div className="form-grid">
-            <div className="input-group form-col-span-2">
-              <label className="input-label">ထုတ်ကုန်ပုံ (Image URL)</label>
-              <input
-                className="input-field"
-                type="url"
-                placeholder="https://images.example.com/item.jpg"
-                value={form.imageUrl}
-                onChange={(e) => onChange('imageUrl', e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="input-group form-col-span-2">
-              <label className="input-label">Affiliate လင့်ခ် (Tracking URL)</label>
-              <input
-                className="input-field"
-                type="url"
-                placeholder="https://shope.ee/..."
-                value={form.affiliateUrl}
-                onChange={(e) => onChange('affiliateUrl', e.target.value)}
-                required
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between" style={{ marginTop: 'var(--space-6)' }}>
-          <div style={{ flex: 1, marginRight: 'var(--space-6)' }}>
-            {status.msg && (
-              <div className={`alert ${status.type === 'success' ? 'alert-success' : 'alert-error'}`}>
-                {status.msg}
+      <Card className="p-6 md:p-8 shadow-sm">
+        <form onSubmit={save}>
+          <div className="pb-6 mb-6 border-b border-border">
+            <h2 className="text-lg font-bold text-foreground mb-4">ထုတ်ကုန် အချက်အလက်</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-1.5 sm:col-span-2">
+                <label className="text-sm font-semibold text-muted-foreground">ခေါင်းစဉ် / Deal အမည်</label>
+                <Input
+                  placeholder="ထုတ်ကုန် အမည်ကို ထည့်ပါ"
+                  value={form.title}
+                  onChange={(e) => onChange('title', e.target.value)}
+                  required
+                />
               </div>
-            )}
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-muted-foreground">E-commerce ပလက်ဖောင်း</label>
+                <Select value={form.platform} onValueChange={(v) => onChange('platform', v)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="ပလက်ဖောင်းရွေးပါ" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Shopee">Shopee</SelectItem>
+                    <SelectItem value="Lazada">Lazada</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-muted-foreground">အမျိုးအစား (Category)</label>
+                <Input
+                  placeholder="ဥပမာ- Electronics, Fashion"
+                  value={form.category}
+                  onChange={(e) => onChange('category', e.target.value)}
+                />
+              </div>
+            </div>
           </div>
 
-          <button
-            type="submit"
-            className="btn btn-gradient"
-            disabled={isSubmitting}
-            style={{ minWidth: '150px' }}
-          >
-            {isSubmitting ? 'သိမ်းဆည်းနေပါသည်...' : 'Deal တင်မည်'}
-          </button>
-        </div>
-      </form>
+          <div className="pb-6 mb-6 border-b border-border">
+            <h2 className="text-lg font-bold text-foreground mb-4">စျေးနှုန်းနှင့် တန်ဖိုး</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-muted-foreground">လက်ရှိ ရောင်းဈေး (฿)</label>
+                <Input
+                  type="number"
+                  min="0"
+                  placeholder="0"
+                  value={form.price}
+                  onChange={(e) => onChange('price', Number(e.target.value))}
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-muted-foreground">မူလစျေးနှုန်း (฿) - ဈေးဟောင်းပြသရန်</label>
+                <Input
+                  type="number"
+                  min="0"
+                  placeholder="0"
+                  value={form.oldPrice}
+                  onChange={(e) => onChange('oldPrice', Number(e.target.value))}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="pb-6 mb-6">
+            <h2 className="text-lg font-bold text-foreground mb-4">ပုံနှင့် ပြင်ပလင့်ခ်များ</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-1.5 sm:col-span-2">
+                <label className="text-sm font-semibold text-muted-foreground">ထုတ်ကုန်ပုံ (Image URL)</label>
+                <Input
+                  type="url"
+                  placeholder="https://images.example.com/item.jpg"
+                  value={form.imageUrl}
+                  onChange={(e) => onChange('imageUrl', e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5 sm:col-span-2">
+                <label className="text-sm font-semibold text-muted-foreground">Affiliate လင့်ခ် (Tracking URL)</label>
+                <Input
+                  type="url"
+                  placeholder="https://shope.ee/..."
+                  value={form.affiliateUrl}
+                  onChange={(e) => onChange('affiliateUrl', e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col-reverse sm:flex-row items-center justify-between mt-6 pt-6 border-t border-border gap-4">
+            <div className="w-full sm:flex-1">
+              {status.msg && (
+                <div className={`px-4 py-3 rounded-md font-medium text-sm flex items-center min-h-[44px] ${status.type === 'success' ? 'bg-green-100 text-green-800 border border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800' : 'bg-destructive/10 text-destructive border border-destructive/20'}`}>
+                  {status.msg}
+                </div>
+              )}
+            </div>
+
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full sm:w-auto min-w-[150px] font-semibold bg-gradient-to-br from-primary to-accent hover:opacity-95 shadow-md"
+            >
+              {isSubmitting ? 'သိမ်းဆည်းနေပါသည်...' : 'Deal တင်မည်'}
+            </Button>
+          </div>
+        </form>
+      </Card>
     </main>
   );
 }

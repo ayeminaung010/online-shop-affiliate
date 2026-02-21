@@ -1,0 +1,15 @@
+[
+  {
+    "id": "demo-shopee-ricecooker",
+    "title": "Mini Rice Cooker 1.2L (Thailand Plug)",
+    "platform": "Shopee",
+    "category": "Kitchen",
+    "price": 299,
+    "oldPrice": 459,
+    "imageUrl": "https://images.unsplash.com/photo-1585515656593-5fdb77497b95?q=80&w=1200&auto=format&fit=crop",
+    "affiliateUrl": "https://shopee.co.th/",
+    "priority": 100,
+    "active": true,
+    "updatedAt": "2026-02-21T09:54:00.000Z"
+  }
+]

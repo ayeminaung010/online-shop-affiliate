@@ -21,6 +21,14 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'img.lazcdn.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.lazcdn.com',
+      },
+      {
+        protocol: 'https',
         hostname: 'down-th.img.susercontent.com',
       },
       {

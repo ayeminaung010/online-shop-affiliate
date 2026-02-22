@@ -216,6 +216,10 @@ export default function HomePage() {
                   <h2 className="font-semibold text-base leading-snug line-clamp-2 m-0">{p.title}</h2>
                 </Link>
 
+                {p.description && (
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed m-0">{p.description}</p>
+                )}
+
                 <div className="flex items-baseline gap-2 mt-auto">
                   <span className="text-xl font-bold text-primary">฿{Number(p.price || 0).toLocaleString()}</span>
                   {p.oldPrice && p.oldPrice > p.price && (

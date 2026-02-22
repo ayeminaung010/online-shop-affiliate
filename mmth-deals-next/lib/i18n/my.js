@@ -111,6 +111,8 @@ const my = {
     'form.links': 'ပုံနှင့် ပြင်ပလင့်ခ်များ',
     'form.imageUrl': 'ထုတ်ကုန်ပုံ (Image URL)',
     'form.affiliateUrl': 'Affiliate လင့်ခ် (Tracking URL)',
+    'form.description': 'ရှင်းလင်းချက် (ရွေးချယ်နိုင်)',
+    'form.descriptionPlaceholder': 'ပစ္စည်းအကြောင်း အသေးစိတ် ထည့်ပါ...',
     'form.status': 'အခြေအနေ',
     'form.submit': 'Deal တင်မည်',
 

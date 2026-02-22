@@ -67,7 +67,7 @@ export default function ProductDetailPage() {
             <Link href="/">
                 <Button variant="ghost" className="mb-4 min-h-[44px] -ml-2">
                     <ArrowLeft className="w-4 h-4 mr-2" />
-                    {t('products.next')} 
+                    {t('products.next')}
                 </Button>
             </Link>
 
@@ -115,6 +115,13 @@ export default function ProductDetailPage() {
                     <h1 className="text-2xl md:text-3xl font-extrabold text-foreground leading-tight">
                         {product.title}
                     </h1>
+
+                    {/* Description */}
+                    {product.description && (
+                        <p className="text-sm md:text-base text-muted-foreground leading-relaxed whitespace-pre-line">
+                            {product.description}
+                        </p>
+                    )}
 
                     {/* Price */}
                     <div className="flex items-baseline gap-3">

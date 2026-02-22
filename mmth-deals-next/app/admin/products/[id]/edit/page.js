@@ -98,6 +98,16 @@ export default function EditProductPage() {
                                 <label className="text-sm font-semibold text-muted-foreground">{t('form.title')}</label>
                                 <Input value={form.title} onChange={(e) => onChange('title', e.target.value)} required />
                             </div>
+                            <div className="flex flex-col gap-1.5 sm:col-span-2">
+                                <label className="text-sm font-semibold text-muted-foreground">{t('form.description')}</label>
+                                <textarea
+                                    className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+                                    placeholder={t('form.descriptionPlaceholder')}
+                                    value={form.description || ''}
+                                    onChange={(e) => onChange('description', e.target.value)}
+                                    rows={3}
+                                />
+                            </div>
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-semibold text-muted-foreground">{t('form.platform')}</label>
                                 <Select value={form.platform} onValueChange={(v) => onChange('platform', v)}>

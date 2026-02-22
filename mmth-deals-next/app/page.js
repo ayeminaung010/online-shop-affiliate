@@ -95,7 +95,7 @@ function ProductGridFallback() {
         ))}
       </div>
       <div className="skeleton-shimmer h-12 w-full rounded-lg mb-5" />
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
         {Array.from({ length: 8 }).map((_, i) => (
           <ProductSkeleton key={i} />
         ))}

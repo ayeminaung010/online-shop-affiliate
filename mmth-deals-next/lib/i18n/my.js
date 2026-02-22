@@ -34,6 +34,7 @@ const my = {
 
     // ── Product Card ──
     'product.buyOn': '{platform} တွင်ဝယ်မည်',
+    'product.viewDeal': 'စျေးကြည့်မယ်',
     'product.noImage': 'ပုံမရှိပါ',
 
     // ── Product Status ──

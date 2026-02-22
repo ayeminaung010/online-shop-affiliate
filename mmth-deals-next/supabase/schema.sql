@@ -33,6 +33,12 @@ create index if not exists idx_products_status on products(status);
 create index if not exists idx_click_logs_product_id on click_logs(product_id);
 create index if not exists idx_click_logs_ts on click_logs(ts desc);
 
+-- Performance indexes matching actual query patterns in store.js
+create index if not exists idx_products_status_priority on products(status, priority desc);
+create index if not exists idx_products_platform on products(platform);
+create index if not exists idx_products_price on products(price);
+create index if not exists idx_products_updated_at on products(updated_at desc);
+
 -- ─────────────────────────────────────────────────────────
 -- Migration: Run this if table already exists to add new columns
 -- ─────────────────────────────────────────────────────────

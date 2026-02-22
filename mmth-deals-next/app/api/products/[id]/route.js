@@ -1,9 +1,16 @@
 import { isAuthorized, readProduct, updateProduct, deleteProduct, updateProductStatus, bulkUpdateStatus } from '@/lib/store';
 
+// Cache TTL for individual product pages
+const CACHE_TTL = 120; // 2 minutes for product detail
+
 export async function GET(request, { params }) {
     try {
         const product = await readProduct(params.id);
-        return Response.json(product);
+        return Response.json(product, {
+            headers: {
+                'Cache-Control': `public, s-maxage=${CACHE_TTL}, stale-while-revalidate=300`,
+            },
+        });
     } catch (error) {
         const status = String(error?.message || '').toLowerCase().includes('no rows') ? 404 : 500;
         return Response.json({ error: status === 404 ? 'Not found' : error.message }, { status });

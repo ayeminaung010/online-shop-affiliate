@@ -65,19 +65,33 @@ function toRow(body) {
 
 export async function readProducts(filters = {}) {
   const supabase = getSupabase();
+  const page = Number(filters.page) || 1;
+  const pageSize = Number(filters.pageSize) || 20;
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+  
   let query = supabase
     .from('products')
-    .select('*')
+    .select('*', { count: 'exact' })
     .in('status', ['active', 'need_recheck', 'low_confidence'])
-    .order('priority', { ascending: false });
+    .order('priority', { ascending: false })
+    .range(from, to);
 
   if (filters.platform) query = query.eq('platform', filters.platform);
   if (filters.category) query = query.eq('category', filters.category);
   if (filters.maxPrice) query = query.lte('price', Number(filters.maxPrice));
+  if (filters.q) query = query.ilike('title', `%${filters.q}%`);
 
-  const { data, error } = await query;
+  const { data, error, count } = await query;
   if (error) throw error;
-  return (data || []).map(mapProduct);
+  
+  return {
+    products: (data || []).map(mapProduct),
+    total: count || 0,
+    page,
+    pageSize,
+    totalPages: Math.ceil((count || 0) / pageSize),
+  };
 }
 
 // ─── Admin: Read All Products (paginated + search) ──────

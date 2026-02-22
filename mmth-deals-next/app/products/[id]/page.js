@@ -1,59 +1,49 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Card, CardContent } from '@/components/ui/card';
+import Image from 'next/image';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { ArrowLeft, ExternalLink, Image as ImageIcon, ShieldCheck } from 'lucide-react';
 import { t } from '@/lib/i18n/my';
+import { readProduct } from '@/lib/store';
+import { notFound } from 'next/navigation';
 
-export default function ProductDetailPage() {
-    const params = useParams();
-    const [product, setProduct] = useState(null);
-    const [loading, setLoading] = useState(true);
+// ISR: revalidate every 120 seconds
+export const revalidate = 120;
 
-    useEffect(() => {
-        async function load() {
-            try {
-                const res = await fetch(`/api/products/${params.id}`);
-                if (res.ok) setProduct(await res.json());
-            } catch { /* ignore */ }
-            setLoading(false);
-        }
-        load();
-    }, [params.id]);
+// Dynamic SEO metadata per product
+export async function generateMetadata({ params }) {
+    const { id } = await params;
+    try {
+        const product = await readProduct(id);
+        return {
+            title: `${product.title} — MM-TH Deals`,
+            description: product.description || `${product.title} ကို ${product.platform} တွင် ฿${Number(product.price).toLocaleString()} ဖြင့် ဝယ်ယူပါ`,
+            openGraph: {
+                title: product.title,
+                description: product.description || `฿${Number(product.price).toLocaleString()} — ${product.platform}`,
+                images: product.imageUrl ? [{ url: product.imageUrl }] : [],
+                type: 'website',
+            },
+        };
+    } catch {
+        return { title: 'Product Not Found — MM-TH Deals' };
+    }
+}
 
-    if (loading) {
-        return (
-            <main className="w-full max-w-4xl mx-auto px-4 py-8">
-                <div className="animate-pulse space-y-6">
-                    <div className="h-8 w-32 bg-muted rounded" />
-                    <div className="aspect-video bg-muted rounded-2xl" />
-                    <div className="h-8 w-3/4 bg-muted rounded" />
-                    <div className="h-6 w-1/2 bg-muted rounded" />
-                    <div className="h-12 w-48 bg-muted rounded-md" />
-                </div>
-            </main>
-        );
+export default async function ProductDetailPage({ params }) {
+    const { id } = await params;
+
+    let product;
+    try {
+        product = await readProduct(id);
+    } catch {
+        notFound();
     }
 
     if (!product) {
-        return (
-            <main className="w-full max-w-4xl mx-auto px-4 py-16 text-center">
-                <div className="text-5xl mb-4">😔</div>
-                <h1 className="text-2xl font-bold text-foreground mb-2">ထုတ်ကုန် ရှာမတွေ့ပါ</h1>
-                <p className="text-muted-foreground mb-6">ဤထုတ်ကုန်သည် မရှိတော့ပါ သို့မဟုတ် ဖယ်ရှားပြီးဖြစ်ပါသည်</p>
-                <Link href="/">
-                    <Button variant="outline" className="min-h-[44px]">
-                        <ArrowLeft className="w-4 h-4 mr-2" />
-                        ပင်မစာမျက်နှာသို့ ပြန်သွားမည်
-                    </Button>
-                </Link>
-            </main>
-        );
+        notFound();
     }
 
     const isShopee = product.platform === 'Shopee';
@@ -67,24 +57,31 @@ export default function ProductDetailPage() {
             <Link href="/">
                 <Button variant="ghost" className="mb-4 min-h-[44px] -ml-2">
                     <ArrowLeft className="w-4 h-4 mr-2" />
-                    {t('products.next')}
+                    {t('products.prev')}
                 </Button>
             </Link>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                 {/* Image */}
                 <div className="relative">
-                    {product.imageUrl ? (
-                        <img
-                            src={product.imageUrl}
-                            alt={product.title}
-                            className="w-full aspect-square object-cover rounded-2xl bg-muted shadow-md"
-                        />
-                    ) : (
-                        <div className="w-full aspect-square bg-muted rounded-2xl flex items-center justify-center shadow-md">
-                            <ImageIcon className="w-16 h-16 text-muted-foreground" />
-                        </div>
-                    )}
+                    <div className="relative w-full aspect-square rounded-2xl bg-muted overflow-hidden shadow-md">
+                        {product.imageUrl ? (
+                            <Image
+                                src={product.imageUrl}
+                                alt={product.title}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                                className="object-cover"
+                                priority
+                                placeholder="blur"
+                                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2UxZDRlOCIvPjwvc3ZnPg=="
+                            />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                                <ImageIcon className="w-16 h-16" />
+                            </div>
+                        )}
+                    </div>
 
                     {discount > 0 && (
                         <div className="absolute top-3 right-3 w-14 h-14 rounded-full bg-red-500 text-white flex flex-col items-center justify-center font-extrabold shadow-lg rotate-[-8deg]">

@@ -160,3 +160,25 @@
 .animate-pulse-ring {
   animation: pulse-ring 2s ease-out infinite;
 }
+
+/* ── Skeleton Shimmer ── */
+@keyframes skeleton-sweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--muted) 25%,
+    var(--muted-foreground, #999) 37%,
+    var(--muted) 63%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 1.5s ease-in-out infinite;
+  opacity: 0.15;
+}

@@ -13,18 +13,18 @@
 
 const my = {
     // ── App ──
-    'app.title': 'MM-TH Deals',
-    'app.copyright': '© {year} MM-TH Deals. မူပိုင်ခွင့်များအားလုံး ရယူထားသည်။',
+    'app.title': 'VantageMM',
+    'app.copyright': '© {year} VantageMM. မူပိုင်ခွင့်များအားလုံး ရယူထားသည်။',
 
     // ── Hero ──
-    'hero.trust': 'စစ်ဆေးပြီးသော Affiliate လင့်ခ်များ',
-    'hero.title': 'MM-TH Deals',
+    'hero.trust': 'စစ်ဆေးပြီးသော လင့်ခ်များ',
+    'hero.title': 'VantageMM',
     'hero.subtitle': 'ထိုင်းနိုင်ငံရောက် မြန်မာများအတွက် သီးသန့်ရွေးချယ်ထားသော ထိုင်းထိပ်တန်း e-commerce ပလက်ဖောင်းများမှ အကောင်းဆုံး deals များ။',
 
     // ── Filters ──
     'filter.all': 'အားလုံး',
-    'filter.shopee': 'Shopee Deals',
-    'filter.lazada': 'Lazada Deals',
+    'filter.shopee': 'Shopee ',
+    'filter.lazada': 'Lazada',
     'filter.under100': '฿100 အောက်',
     'filter.under300': '฿300 အောက်',
 
@@ -72,7 +72,7 @@ const my = {
 
     // ── Admin: Product List ──
     'products.title': 'ထုတ်ကုန်များ',
-    'products.search': 'ထုတ်ကုန်အမည်ဖြင့် ရှာဖွေမည်...',
+    'products.search': 'suncream,mositurizer, etc ...',
     'products.noResults': 'ထုတ်ကုန် ရှာမတွေ့ပါ',
     'products.selectAll': 'အားလုံးရွေးမည်',
     'products.selected': 'ရွေးထားသည် {count} ခု',

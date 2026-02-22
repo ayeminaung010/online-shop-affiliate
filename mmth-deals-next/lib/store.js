@@ -69,7 +69,7 @@ export async function readProducts(filters = {}) {
   const pageSize = Number(filters.pageSize) || 20;
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
-  
+
   let query = supabase
     .from('products')
     .select('*', { count: 'exact' })
@@ -84,13 +84,34 @@ export async function readProducts(filters = {}) {
 
   const { data, error, count } = await query;
   if (error) throw error;
-  
+
   return {
     products: (data || []).map(mapProduct),
     total: count || 0,
     page,
     pageSize,
     totalPages: Math.ceil((count || 0) / pageSize),
+  };
+}
+
+// ─── Public: Deal Summary Stats (count-only) ────────────
+
+export async function readDealStats() {
+  const supabase = getSupabase();
+  const activeStatuses = ['active', 'need_recheck', 'low_confidence'];
+
+  const [totalRes, under300Res, shopeeRes, lazadaRes] = await Promise.all([
+    supabase.from('products').select('id', { count: 'exact', head: true }).in('status', activeStatuses),
+    supabase.from('products').select('id', { count: 'exact', head: true }).in('status', activeStatuses).lte('price', 300),
+    supabase.from('products').select('id', { count: 'exact', head: true }).in('status', activeStatuses).eq('platform', 'Shopee'),
+    supabase.from('products').select('id', { count: 'exact', head: true }).in('status', activeStatuses).eq('platform', 'Lazada'),
+  ]);
+
+  return {
+    total: totalRes.count || 0,
+    under300: under300Res.count || 0,
+    shopee: shopeeRes.count || 0,
+    lazada: lazadaRes.count || 0,
   };
 }
 

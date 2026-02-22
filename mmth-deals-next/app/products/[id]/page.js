@@ -18,7 +18,7 @@ export async function generateMetadata({ params }) {
     try {
         const product = await readProduct(id);
         return {
-            title: `${product.title} — MM-TH Deals`,
+            title: `${product.title} — VantageMM`,
             description: product.description || `${product.title} ကို ${product.platform} တွင် ฿${Number(product.price).toLocaleString()} ဖြင့် ဝယ်ယူပါ`,
             openGraph: {
                 title: product.title,
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }) {
             },
         };
     } catch {
-        return { title: 'Product Not Found — MM-TH Deals' };
+        return { title: 'Product Not Found — VantageMM' };
     }
 }
 

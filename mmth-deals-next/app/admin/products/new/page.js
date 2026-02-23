@@ -19,7 +19,7 @@ export default function NewProductPage() {
     const [token, setToken] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [form, setForm] = useState({
-        title: '', platform: 'Shopee', category: 'General',
+        title: '', platform: 'Shopee', category: '',
         price: 0, oldPrice: 0, imageUrl: '', affiliateUrl: '',
         description: '', priority: 0, status: 'active',
     });

@@ -1,14 +1,16 @@
 'use client';
 
+import { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import HeaderSearch from '@/components/HeaderSearch';
 
 export default function SiteHeader() {
     return (
         <header className="w-full bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-50">
-            <div className="w-full max-w-6xl mx-auto px-4 h-14 sm:h-16 flex items-center gap-3">
-                <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="w-full max-w-6xl mx-auto px-4 h-14 sm:h-16 flex items-center gap-2 sm:gap-3">
+                <Link href="/" className="flex items-center gap-2.5 group shrink-0">
                     <Image
                         src="/brand/vantagemm-logo.jpg"
                         alt="VantageMM Logo"
@@ -27,6 +29,9 @@ export default function SiteHeader() {
                     </div>
                 </Link>
                 <div className="flex-1" />
+                <Suspense fallback={null}>
+                    <HeaderSearch />
+                </Suspense>
                 <LanguageSwitcher />
             </div>
         </header>

@@ -4,8 +4,7 @@ import { useEffect, useState, useCallback, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { t } from '@/lib/i18n';
 import ProductCard from '@/components/ProductCard';
 import { ProductSkeleton } from '@/components/Skeleton';
@@ -61,7 +60,6 @@ export default function HomePageClient({ initialData }) {
     const [data, setData] = useState(initialData);
     const [platform, setPlatform] = useState(urlPlatform);
     const [maxPrice, setMaxPrice] = useState(urlMaxPrice);
-    const [searchInput, setSearchInput] = useState(urlQ);
     const [searchQuery, setSearchQuery] = useState(urlQ);
     const [page, setPage] = useState(urlPage);
     const [loading, setLoading] = useState(false);
@@ -72,14 +70,14 @@ export default function HomePageClient({ initialData }) {
         setHasMounted(true);
     }, []);
 
-    // Debounce search input
+    // Sync search query from URL (managed by HeaderSearch)
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setSearchQuery(searchInput);
+        const newQ = searchParams.get('q') || '';
+        if (newQ !== searchQuery) {
+            setSearchQuery(newQ);
             setPage(1);
-        }, 300);
-        return () => clearTimeout(timer);
-    }, [searchInput]);
+        }
+    }, [searchParams]);
 
     // Fetch data when filters change (skip initial since we have SSR data)
     const load = useCallback(async () => {
@@ -131,17 +129,6 @@ export default function HomePageClient({ initialData }) {
     return (
         <>
             <FilterBar platform={platform} maxPrice={maxPrice} onFilter={handleFilter} />
-
-            {/* Search Bar */}
-            <div className="relative mb-5">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
-                <Input
-                    placeholder="ထုတ်ကုန်အမည်ဖြင့် ရှာဖွေမည်..."
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    className="pl-10 h-12 text-base"
-                />
-            </div>
 
             <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
                 {loading ? (

@@ -16,7 +16,13 @@ export const metadata = {
   authors: [{ name: 'VantageMM' }],
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes',
   themeColor: '#4444ca',
-  // TODO: Generate favicon from /brand/vantagemm-logo.jpg (convert to .ico/.png and add icons[] here)
+  icons: {
+    icon: [
+      { url: '/favicons/favicon.ico', sizes: 'any' },
+      { url: '/favicons/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+  },
+  manifest: '/favicons/site.webmanifest',
   openGraph: {
     title: 'VantageMM — Thailand Deals Curated for Myanmar',
     description: 'ထိုင်းနိုင်ငံရောက် မြန်မာများအတွက် Shopee, Lazada deals များ',

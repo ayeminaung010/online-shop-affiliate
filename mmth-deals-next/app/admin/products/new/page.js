@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { ArrowLeft } from 'lucide-react';
 import { getSupabaseBrowser } from '@/lib/supabase-browser';
 import { t } from '@/lib/i18n/my';
+import CategoryCombobox from '@/components/admin/CategoryCombobox';
 import {
     Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -24,6 +25,7 @@ export default function NewProductPage() {
     });
     const [status, setStatus] = useState({ type: '', msg: '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
         const supabase = getSupabaseBrowser();
@@ -32,6 +34,17 @@ export default function NewProductPage() {
             setToken(session.access_token);
             setUserEmail(session.user.email || '');
         });
+        // Fetch distinct categories
+        supabase
+            .from('products')
+            .select('category')
+            .not('category', 'is', null)
+            .then(({ data }) => {
+                if (data) {
+                    const unique = [...new Set(data.map((r) => r.category).filter(Boolean))];
+                    setCategories(unique.sort());
+                }
+            });
     }, [router]);
 
     const onChange = (k, v) => setForm((f) => ({ ...f, [k]: v }));
@@ -103,7 +116,12 @@ export default function NewProductPage() {
                             </div>
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-semibold text-muted-foreground">{t('form.category')}</label>
-                                <Input placeholder={t('form.categoryPlaceholder')} value={form.category} onChange={(e) => onChange('category', e.target.value)} />
+                                <CategoryCombobox
+                                    value={form.category}
+                                    onValueChange={(v) => onChange('category', v)}
+                                    categories={categories}
+                                    placeholder={t('form.categoryPlaceholder')}
+                                />
                             </div>
                         </div>
                     </div>

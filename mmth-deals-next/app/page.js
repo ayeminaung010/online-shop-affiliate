@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle } from 'lucide-react';
 import { t } from '@/lib/i18n';
-import { readProducts, readDealStats } from '@/lib/store';
+import { readProducts, readDealStats, readCategories } from '@/lib/store';
 import HomePageClient from '@/components/HomePageClient';
 import { ProductSkeleton } from '@/components/Skeleton';
 
@@ -79,20 +79,24 @@ export default async function HomePage({ searchParams }) {
   const sp = await searchParams;
   const platform = sp?.platform || '';
   const maxPrice = sp?.maxPrice || '';
+  const category = sp?.category || '';
   const q = sp?.q || '';
   const page = Number(sp?.page || 1);
 
-  // Fetch data + stats in parallel on the server
+  // Fetch data + stats + categories in parallel on the server
   let initialData;
   let stats;
+  let categories;
   try {
-    [initialData, stats] = await Promise.all([
-      readProducts({ platform, maxPrice, q, page, pageSize: 20 }),
+    [initialData, stats, categories] = await Promise.all([
+      readProducts({ platform, maxPrice, category, q, page, pageSize: 20 }),
       readDealStats(),
+      readCategories(),
     ]);
   } catch {
     initialData = { products: [], total: 0, page: 1, pageSize: 20, totalPages: 0 };
     stats = { total: 0, under300: 0, shopee: 0, lazada: 0 };
+    categories = [];
   }
 
   return (
@@ -100,7 +104,7 @@ export default async function HomePage({ searchParams }) {
       <DealSummary stats={stats} />
 
       <Suspense fallback={<ProductGridFallback />}>
-        <HomePageClient initialData={initialData} />
+        <HomePageClient initialData={initialData} categories={categories} />
       </Suspense>
 
       <Disclaimer />

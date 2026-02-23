@@ -95,6 +95,20 @@ export async function readProducts(filters = {}) {
   };
 }
 
+// ─── Public: Read Distinct Categories ───────────────────
+
+export async function readCategories() {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from('products')
+    .select('category')
+    .in('status', ['active', 'need_recheck', 'low_confidence'])
+    .not('category', 'is', null);
+  if (error) throw error;
+  const unique = [...new Set((data || []).map((r) => r.category).filter(Boolean))];
+  return unique.sort();
+}
+
 // ─── Public: Deal Summary Stats (count-only) ────────────
 
 export async function readDealStats() {

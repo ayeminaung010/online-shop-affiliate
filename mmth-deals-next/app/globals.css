@@ -182,3 +182,54 @@
   animation: skeleton-sweep 1.5s ease-in-out infinite;
   opacity: 0.15;
 }
+
+/* ── Scrollbar Utilities ── */
+
+/* Hide scrollbar completely */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Premium scrollbar: hidden by default, shown on hover */
+.premium-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s ease;
+}
+.premium-scroll:hover {
+  scrollbar-color: var(--primary, #1D3E8A) transparent;
+}
+
+/* Webkit (Chrome/Safari/Edge) */
+.premium-scroll::-webkit-scrollbar {
+  height: 5px;
+}
+.premium-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 999px;
+}
+.premium-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+  transition: background 0.3s ease;
+}
+.premium-scroll:hover::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #1D3E8A, var(--primary, #4444ca));
+  box-shadow: 0 0 4px rgba(29, 62, 138, 0.25);
+}
+
+/* Mobile: no scrollbar, touch swipe only */
+@media (pointer: coarse) {
+  .premium-scroll {
+    scrollbar-width: none;
+  }
+  .premium-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft } from 'lucide-react';
 import { getSupabaseBrowser } from '@/lib/supabase-browser';
-import { t } from '@/lib/i18n/my';
+import { t } from '@/lib/i18n';
 import CategoryCombobox from '@/components/admin/CategoryCombobox';
 import {
     Select, SelectContent, SelectItem, SelectTrigger, SelectValue,

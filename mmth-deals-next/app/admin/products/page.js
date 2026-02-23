@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { getSupabaseBrowser } from '@/lib/supabase-browser';
 import { ALL_STATUSES, isStale } from '@/lib/types';
-import { t } from '@/lib/i18n/my';
+import { t } from '@/lib/i18n';
 import {
     Search, PlusCircle, ChevronLeft, ChevronRight, ArrowLeft,
     Trash2, Pencil, XCircle, Image as ImageIcon, AlertTriangle,

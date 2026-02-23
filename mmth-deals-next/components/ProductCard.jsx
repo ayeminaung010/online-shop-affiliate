@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { ExternalLink, ImageIcon } from 'lucide-react';
-import { t } from '@/lib/i18n/my';
+import { t } from '@/lib/i18n';
 
 const ProductCard = memo(function ProductCard({ p }) {
   const isShopee = p.platform === 'Shopee';

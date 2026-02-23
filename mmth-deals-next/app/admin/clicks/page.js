@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { getSupabaseBrowser } from '@/lib/supabase-browser';
-import { t } from '@/lib/i18n/my';
+import { t } from '@/lib/i18n';
 import {
     ArrowLeft, ChevronLeft, ChevronRight, MousePointerClick,
     Smartphone, Globe, Tag,

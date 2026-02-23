@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ShieldCheck, Package, PlusCircle, LogOut, AlertTriangle, MousePointerClick } from 'lucide-react';
 import { getSupabaseBrowser } from '@/lib/supabase-browser';
-import { t } from '@/lib/i18n/my';
+import { t } from '@/lib/i18n';
 
 export default function AdminDashboard() {
   const router = useRouter();

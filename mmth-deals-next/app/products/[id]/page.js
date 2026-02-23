@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { ArrowLeft, ExternalLink, Image as ImageIcon, ShieldCheck } from 'lucide-react';
-import { t } from '@/lib/i18n/my';
+import { t } from '@/lib/i18n';
 import { readProduct } from '@/lib/store';
 import { notFound } from 'next/navigation';
 

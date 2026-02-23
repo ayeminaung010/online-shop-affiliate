@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { PRODUCT_STATUS_CONFIG } from '@/lib/types';
-import { t } from '@/lib/i18n/my';
+import { t } from '@/lib/i18n';
 
 /**
  * Reusable status badge component.

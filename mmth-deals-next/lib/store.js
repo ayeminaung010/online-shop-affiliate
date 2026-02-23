@@ -75,6 +75,7 @@ export async function readProducts(filters = {}) {
     .select('*', { count: 'exact' })
     .in('status', ['active', 'need_recheck', 'low_confidence'])
     .order('priority', { ascending: false })
+    .order('id', { ascending: false })
     .range(from, to);
 
   if (filters.platform) query = query.eq('platform', filters.platform);

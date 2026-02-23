@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
-import { t } from '@/lib/i18n/my';
+import { t } from '@/lib/i18n';
 import ProductCard from '@/components/ProductCard';
 import { ProductSkeleton } from '@/components/Skeleton';
 

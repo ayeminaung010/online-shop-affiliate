@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle } from 'lucide-react';
-import { t } from '@/lib/i18n/my';
+import { t } from '@/lib/i18n';
 import { readProducts, readDealStats } from '@/lib/store';
 import HomePageClient from '@/components/HomePageClient';
 import { ProductSkeleton } from '@/components/Skeleton';

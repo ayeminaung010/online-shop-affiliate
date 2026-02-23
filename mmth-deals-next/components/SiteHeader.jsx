@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function SiteHeader() {
     return (
@@ -25,6 +26,8 @@ export default function SiteHeader() {
                         </span>
                     </div>
                 </Link>
+                <div className="flex-1" />
+                <LanguageSwitcher />
             </div>
         </header>
     );

@@ -4,21 +4,18 @@ import { getSupabase } from '@/lib/supabase';
 
 /**
  * Verify admin auth via Supabase JWT from Authorization header.
- * Falls back to legacy x-admin-token for backward compatibility.
  */
 export async function isAuthorized(request) {
-  // Try Supabase JWT first
   const authHeader = request.headers.get('authorization');
-  if (authHeader?.startsWith('Bearer ')) {
-    const token = authHeader.slice(7);
-    const supabase = getSupabase();
-    const { data: { user }, error } = await supabase.auth.getUser(token);
-    if (!error && user) return true;
+  if (!authHeader?.startsWith('Bearer ')) {
+    return false;
   }
-
-  // Fallback: legacy token
-  const legacyToken = request.headers.get('x-admin-token');
-  return legacyToken && legacyToken === process.env.ADMIN_TOKEN;
+  
+  const token = authHeader.slice(7);
+  const supabase = getSupabase();
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  
+  return !error && user !== null;
 }
 
 // ─── Product Mapper ─────────────────────────────────────
@@ -264,33 +261,59 @@ export async function logClick({ product, source, campaign, ua }) {
 export async function readStats() {
   const supabase = getSupabase();
 
-  const [{ data: products, error: pErr }, { data: clicks, error: cErr }] = await Promise.all([
-    supabase.from('products').select('id,title,platform,status'),
-    supabase.from('click_logs').select('product_id'),
+  // Get counts with pagination-safe queries (no loading all data into memory)
+  const [{ count: totalProducts }, { count: activeCount }, { count: needRecheckCount }] = await Promise.all([
+    supabase.from('products').select('*', { count: 'exact', head: true }),
+    supabase.from('products').select('*', { count: 'exact', head: true }).eq('status', 'active'),
+    supabase.from('products').select('*', { count: 'exact', head: true }).eq('status', 'need_recheck'),
   ]);
 
-  if (pErr) throw pErr;
-  if (cErr) throw cErr;
+  // Get click count only (not all click data)
+  const { count: totalClicks } = await supabase
+    .from('click_logs')
+    .select('*', { count: 'exact', head: true });
 
-  const byProduct = {};
-  for (const c of clicks || []) byProduct[c.product_id] = (byProduct[c.product_id] || 0) + 1;
+  // Get top 50 products by priority (paginated, not all)
+  const { data: topProducts } = await supabase
+    .from('products')
+    .select('id, title, platform, status')
+    .limit(50)
+    .order('priority', { ascending: false });
 
-  const allProducts = products || [];
-  const result = allProducts
+  // Get click counts for these products using grouped query
+  let clickCounts = {};
+  if (topProducts && topProducts.length > 0) {
+    const productIds = topProducts.map(p => p.id);
+    // Query clicks grouped by product_id (more efficient than loading all)
+    const { data: clickData } = await supabase
+      .from('click_logs')
+      .select('product_id')
+      .in('product_id', productIds);
+    
+    // Count clicks per product
+    if (clickData) {
+      clickCounts = {};
+      for (const click of clickData) {
+        clickCounts[click.product_id] = (clickCounts[click.product_id] || 0) + 1;
+      }
+    }
+  }
+
+  const result = (topProducts || [])
     .map((p) => ({
       id: p.id,
       title: p.title,
       platform: p.platform,
-      clicks: byProduct[p.id] || 0,
+      clicks: clickCounts[p.id] || 0,
       status: p.status || 'active',
     }))
     .sort((a, b) => b.clicks - a.clicks);
 
   return {
-    totalClicks: (clicks || []).length,
-    totalProducts: allProducts.length,
-    activeProducts: allProducts.filter((p) => (p.status || 'active') === 'active').length,
-    needRecheck: allProducts.filter((p) => p.status === 'need_recheck').length,
+    totalClicks: totalClicks || 0,
+    totalProducts: totalProducts || 0,
+    activeProducts: activeCount || 0,
+    needRecheck: needRecheckCount || 0,
     products: result,
   };
 }

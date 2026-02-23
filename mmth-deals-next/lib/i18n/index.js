@@ -13,20 +13,27 @@ import en from './en';
 
 const dictionaries = { my, en };
 
-/**
- * Get current locale from cookie (works in both server and client).
- * Defaults to 'my' (Myanmar).
- */
 export function getLocale() {
+    // 1. Client-side execution
     if (typeof document !== 'undefined') {
         const match = document.cookie.match(/(?:^|; )locale=([^;]*)/);
         return match ? match[1] : 'my';
     }
-    // Server-side: try to read from Next.js headers (cookies)
+
+    // 2. Server-side execution
     try {
+        // next/headers is not available during static generation (build time) if used dynamically
         const { cookies } = require('next/headers');
-        const cookieStore = cookies();
-        return cookieStore.get('locale')?.value || 'my';
+
+        // Wrap in try-catch because calling cookies() might throw an error 
+        // if we are statically prerendering pages at build time.
+        try {
+            const cookieStore = cookies();
+            return cookieStore.get('locale')?.value || 'my';
+        } catch {
+            return 'my';
+        }
+
     } catch {
         return 'my';
     }

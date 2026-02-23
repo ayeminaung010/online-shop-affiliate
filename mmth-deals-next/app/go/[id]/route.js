@@ -1,5 +1,24 @@
 import { getSupabase } from '@/lib/supabase';
 import { logClick } from '@/lib/store';
+import { ALLOWED_AFFILIATE_DOMAINS } from '@/lib/validation';
+
+/**
+ * Validate affiliate URL against allowed domains
+ * Prevents open redirect attacks
+ */
+function isValidAffiliateUrl(urlString) {
+  try {
+    const parsed = new URL(urlString);
+    const domain = parsed.hostname.replace(/^www\./, '');
+    
+    // Check if domain matches allowed patterns
+    return ALLOWED_AFFILIATE_DOMAINS.some(allowed => 
+      domain === allowed || domain.endsWith('.' + allowed)
+    );
+  } catch {
+    return false;
+  }
+}
 
 export async function GET(request, { params }) {
   try {
@@ -11,7 +30,15 @@ export async function GET(request, { params }) {
       .in('status', ['active', 'need_recheck'])
       .single();
 
-    if (error || !product) return new Response('Link not found', { status: 404 });
+    if (error || !product) {
+      return new Response('Link not found', { status: 404 });
+    }
+
+    // SECURITY: Validate affiliate URL before redirect (prevent open redirect attack)
+    if (!isValidAffiliateUrl(product.affiliate_url)) {
+      console.error('Invalid affiliate domain for product:', product.id, product.affiliate_url);
+      return new Response('Invalid redirect URL', { status: 400 });
+    }
 
     const url = new URL(request.url);
     await logClick({
@@ -22,7 +49,8 @@ export async function GET(request, { params }) {
     });
 
     return Response.redirect(product.affiliate_url, 302);
-  } catch {
+  } catch (error) {
+    console.error('Redirect error:', error);
     return new Response('Redirect failed', { status: 500 });
   }
 }

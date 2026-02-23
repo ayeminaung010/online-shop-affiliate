@@ -9,6 +9,7 @@ import { ChevronLeft, ChevronRight, ChevronRight as ArrowRight } from 'lucide-re
 import { t } from '@/lib/i18n';
 import ProductCard from '@/components/ProductCard';
 import { ProductSkeleton } from '@/components/Skeleton';
+import { fetchWithRetry } from '@/lib/fetch';
 
 const PAGE_SIZE = 20;
 
@@ -163,10 +164,15 @@ export default function HomePageClient({ initialData, categories = [] }) {
         qs.set('pageSize', String(PAGE_SIZE));
 
         try {
-            const res = await fetch('/api/products?' + qs.toString());
+            const res = await fetchWithRetry('/api/products?' + qs.toString());
             if (res.ok) {
                 const result = await res.json();
                 setData(result);
+            } else if (res.status === 429) {
+                // Rate limited, show error
+                console.warn('Rate limited, please wait');
+            } else {
+                console.error('Failed to load products:', res.status);
             }
         } catch (error) {
             console.error('Failed to load products:', error);

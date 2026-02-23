@@ -2,6 +2,10 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import SiteHeader from '@/components/SiteHeader';
 import Chatbot from '@/components/Chatbot';
+import { validateEnv } from '@/lib/env';
+
+// Validate environment variables at startup
+validateEnv();
 
 const inter = Inter({
   subsets: ['latin'],
@@ -15,8 +19,6 @@ export const metadata = {
   description: 'ထိုင်းနိုင်ငံရောက် မြန်မာများအတွက် Shopee, Lazada deals များ',
   keywords: ['VantageMM', 'shopping', 'Thailand', 'Myanmar', 'deals', 'Shopee', 'Lazada'],
   authors: [{ name: 'VantageMM' }],
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes',
-  themeColor: '#4444ca',
   icons: {
     icon: [
       { url: '/favicons/favicon.ico', sizes: 'any' },
@@ -32,10 +34,18 @@ export const metadata = {
   },
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: '#4444ca',
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="my" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <SiteHeader />
         {children}
         <Chatbot />

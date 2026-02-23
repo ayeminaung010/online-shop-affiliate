@@ -1,4 +1,5 @@
 import { isAuthorized, readProducts, readAllProducts, createProduct } from '@/lib/store';
+import { CreateProductSchema, validateAffiliateUrl } from '@/lib/validation';
 
 // Cache configuration for public product listings
 const CACHE_TTL = 60; // 60 seconds for public product data
@@ -31,7 +32,7 @@ export async function GET(request) {
     // Public requests: only active products with pagination
     const page = Number(searchParams.get('page') || 1);
     const pageSize = Number(searchParams.get('pageSize') || 20);
-    
+
     const result = await readProducts({
       platform: searchParams.get('platform') || '',
       category: searchParams.get('category') || '',
@@ -40,7 +41,7 @@ export async function GET(request) {
       page,
       pageSize,
     });
-    
+
     // Return with caching headers for public data
     return Response.json(result, {
       headers: {
@@ -48,7 +49,8 @@ export async function GET(request) {
       },
     });
   } catch (error) {
-    return Response.json({ error: error.message || 'Failed to load products' }, { status: 500 });
+    console.error('GET /api/products error:', error);
+    return Response.json({ error: 'Failed to load products' }, { status: 500 });
   }
 }
 
@@ -57,15 +59,31 @@ export async function POST(request) {
     const authed = await isAuthorized(request);
     if (!authed) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const body = await request.json();
-    const { title, platform, affiliateUrl } = body;
-    if (!title || !platform || !affiliateUrl) {
-      return Response.json({ error: 'title, platform, affiliateUrl required' }, { status: 400 });
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return Response.json({ error: 'Invalid JSON body' }, { status: 400 });
     }
 
-    const product = await createProduct(body);
+    // Validate input with Zod
+    const validation = CreateProductSchema.safeParse(body);
+    if (!validation.success) {
+      const errors = validation.error.errors.map(e => `${e.path.join('.')}: ${e.message}`);
+      return Response.json({ error: 'Validation failed', details: errors }, { status: 400 });
+    }
+
+    // Validate affiliate URL domain (security: prevent open redirect)
+    try {
+      validateAffiliateUrl(validation.data.affiliateUrl);
+    } catch (err) {
+      return Response.json({ error: err.message }, { status: 400 });
+    }
+
+    const product = await createProduct(validation.data);
     return Response.json(product, { status: 201 });
   } catch (error) {
-    return Response.json({ error: error.message || 'Failed to create product' }, { status: 500 });
+    console.error('POST /api/products error:', error);
+    return Response.json({ error: 'Failed to create product' }, { status: 500 });
   }
 }

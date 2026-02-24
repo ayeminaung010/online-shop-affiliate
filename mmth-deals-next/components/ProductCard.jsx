@@ -52,14 +52,16 @@ const ProductCard = memo(function ProductCard({ p }) {
           <h2 className="font-semibold text-sm sm:text-base leading-snug line-clamp-2 min-h-[2.5rem] m-0">{p.title}</h2>
         </Link>
 
-        {p.description && (
-          <p className="hidden sm:block text-xs text-muted-foreground line-clamp-2 leading-relaxed m-0">{p.description}</p>
-        )}
 
         <div className="flex items-baseline gap-1.5 mt-auto">
           <span className="text-lg sm:text-xl font-bold text-primary">฿{Number(p.price || 0).toLocaleString()}</span>
           {p.oldPrice && p.oldPrice > p.price && (
+            <>
             <span className="text-xs sm:text-sm text-muted-foreground line-through">฿{Number(p.oldPrice).toLocaleString()}</span>
+            <Badge variant="secondary" className="text-[10px] sm:text-xs bg-red-100 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 font-bold px-1.5 py-0 border-transparent">
+              -{Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100)}%
+            </Badge>
+            </>
           )}
         </div>
 

@@ -15,7 +15,7 @@ const ProductCard = memo(function ProductCard({ p }) {
 
   return (
     <Card className="flex flex-col overflow-hidden rounded-xl hover:-translate-y-1 hover:shadow-lg transition-all duration-200 border-border hover:border-primary">
-      <Link href={`/products/${p.id}`} className="cursor-pointer">
+      <Link href={`/products/${p.id}`} className="cursor-pointer" data-umami-event="click-product" data-umami-event-product={p.title}>
         <div className="relative w-full aspect-square bg-muted">
           {p.imageUrl ? (
             <Image
@@ -48,7 +48,7 @@ const ProductCard = memo(function ProductCard({ p }) {
           <span className="text-muted-foreground text-[10px] sm:text-xs font-semibold uppercase tracking-wide truncate">{p.category}</span>
         </div>
 
-        <Link href={`/products/${p.id}`} className="hover:text-primary transition-colors">
+        <Link href={`/products/${p.id}`} className="hover:text-primary transition-colors" data-umami-event="click-product" data-umami-event-product={p.title}>
           <h2 className="font-semibold text-sm sm:text-base leading-snug line-clamp-2 min-h-[2.5rem] m-0">{p.title}</h2>
         </Link>
 
@@ -57,16 +57,16 @@ const ProductCard = memo(function ProductCard({ p }) {
           <span className="text-lg sm:text-xl font-bold text-primary">฿{Number(p.price || 0).toLocaleString()}</span>
           {p.oldPrice && p.oldPrice > p.price && (
             <>
-            <span className="text-xs sm:text-sm text-muted-foreground line-through">฿{Number(p.oldPrice).toLocaleString()}</span>
-            <Badge variant="secondary" className="text-[10px] sm:text-xs bg-red-100 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 font-bold px-1.5 py-0 border-transparent">
-              -{Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100)}%
-            </Badge>
+              <span className="text-xs sm:text-sm text-muted-foreground line-through">฿{Number(p.oldPrice).toLocaleString()}</span>
+              <Badge variant="secondary" className="text-[10px] sm:text-xs bg-red-100 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 font-bold px-1.5 py-0 border-transparent">
+                -{Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100)}%
+              </Badge>
             </>
           )}
         </div>
 
         <Button asChild className="w-full mt-1 font-semibold shadow-sm hover:shadow-md transition-all bg-primary min-h-[40px] sm:min-h-[44px] text-xs sm:text-sm">
-          <a href={`/go/${p.id}?source=tiktok-bio`} target="_blank" rel="noopener noreferrer">
+          <a href={`/go/${p.id}?source=tiktok-bio`} target="_blank" rel="noopener noreferrer" data-umami-event="click-deal" data-umami-event-product={p.title}>
             {t('product.viewDeal')}
             <ExternalLink className="ml-1.5 w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </a>

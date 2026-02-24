@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import SiteHeader from '@/components/SiteHeader';
 import Chatbot from '@/components/Chatbot';
 import { validateEnv } from '@/lib/env';
+import Script from 'next/script';
 
 // Validate environment variables at startup
 validateEnv();
@@ -46,6 +47,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="my" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
+        {process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
+          <Script
+            defer
+            src="https://cloud.umami.is/script.js"
+            data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+            strategy="afterInteractive"
+          />
+        )}
         <SiteHeader />
         {children}
         <Chatbot />

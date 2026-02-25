@@ -4,6 +4,7 @@ import SiteHeader from '@/components/SiteHeader';
 import Chatbot from '@/components/Chatbot';
 import { validateEnv } from '@/lib/env';
 import Script from 'next/script';
+import PageTracker from '@/components/PageTracker';
 
 // Validate environment variables at startup
 validateEnv();
@@ -56,6 +57,7 @@ export default function RootLayout({ children }) {
           />
         )}
         <SiteHeader />
+        <PageTracker />
         {children}
         <Chatbot />
       </body>

@@ -10,11 +10,11 @@ export async function isAuthorized(request) {
   if (!authHeader?.startsWith('Bearer ')) {
     return false;
   }
-  
+
   const token = authHeader.slice(7);
   const supabase = getSupabase();
   const { data: { user }, error } = await supabase.auth.getUser(token);
-  
+
   return !error && user !== null;
 }
 
@@ -241,12 +241,14 @@ export async function toggleProduct(id) {
 
 // ─── Click Logging ──────────────────────────────────────
 
-export async function logClick({ product, source, campaign, ua }) {
+export async function logClick({ product, source, campaign, ua, actionType = 'click', pageUrl = '' }) {
   const supabase = getSupabase();
   const row = {
     id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-    product_id: product.id,
-    platform: product.platform,
+    action_type: actionType,
+    page_url: pageUrl,
+    product_id: product?.id || null,
+    platform: product?.platform || null,
     source: source || 'direct',
     campaign: campaign || '',
     ua: ua || '',
@@ -268,10 +270,12 @@ export async function readStats() {
     supabase.from('products').select('*', { count: 'exact', head: true }).eq('status', 'need_recheck'),
   ]);
 
-  // Get click count only (not all click data)
-  const { count: totalClicks } = await supabase
-    .from('click_logs')
-    .select('*', { count: 'exact', head: true });
+  // Get counts for each traffic type
+  const [{ count: totalClicks }, { count: pageViews }, { count: productViews }] = await Promise.all([
+    supabase.from('click_logs').select('*', { count: 'exact', head: true }).eq('action_type', 'click'),
+    supabase.from('click_logs').select('*', { count: 'exact', head: true }).eq('action_type', 'page_view'),
+    supabase.from('click_logs').select('*', { count: 'exact', head: true }).eq('action_type', 'product_view'),
+  ]);
 
   // Get top 50 products by priority (paginated, not all)
   const { data: topProducts } = await supabase
@@ -288,8 +292,9 @@ export async function readStats() {
     const { data: clickData } = await supabase
       .from('click_logs')
       .select('product_id')
+      .in('action_type', ['click', 'product_view'])
       .in('product_id', productIds);
-    
+
     // Count clicks per product
     if (clickData) {
       clickCounts = {};
@@ -311,6 +316,8 @@ export async function readStats() {
 
   return {
     totalClicks: totalClicks || 0,
+    pageViews: pageViews || 0,
+    productViews: productViews || 0,
     totalProducts: totalProducts || 0,
     activeProducts: activeCount || 0,
     needRecheck: needRecheckCount || 0,

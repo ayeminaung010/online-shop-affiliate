@@ -18,7 +18,7 @@ export async function GET(request) {
         // Build query
         let query = supabase
             .from('click_logs')
-            .select('*, products!inner(title, platform)', { count: 'exact' })
+            .select('*, products(title, platform)', { count: 'exact' }) // Changed to LEFT JOIN since products can be null
             .order('ts', { ascending: false })
             .range(from, to);
 
@@ -29,9 +29,11 @@ export async function GET(request) {
 
         const logs = (data || []).map((row) => ({
             id: row.id,
+            actionType: row.action_type,
+            pageUrl: row.page_url,
             productId: row.product_id,
             productTitle: row.products?.title || '—',
-            platform: row.products?.platform || row.platform,
+            platform: row.products?.platform || row.platform || '—',
             source: row.source,
             campaign: row.campaign,
             ua: row.ua,

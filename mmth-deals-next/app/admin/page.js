@@ -79,22 +79,30 @@ export default function AdminDashboard() {
       </header>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 my-6">
+      <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 my-6">
         <Card className="p-5 flex flex-col gap-1 shadow-sm">
-          <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">{t('admin.stats.totalDeals')}</span>
-          <span className="text-3xl font-extrabold text-foreground">{stats?.totalProducts ?? '—'}</span>
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('admin.stats.totalDeals')}</span>
+          <span className="text-2xl font-extrabold text-foreground">{stats?.totalProducts ?? '—'}</span>
         </Card>
         <Card className="p-5 flex flex-col gap-1 shadow-sm">
-          <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">{t('admin.stats.activeDeals')}</span>
-          <span className="text-3xl font-extrabold text-green-600 dark:text-green-500">{stats?.activeProducts ?? '—'}</span>
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('admin.stats.activeDeals')}</span>
+          <span className="text-2xl font-extrabold text-green-600 dark:text-green-500">{stats?.activeProducts ?? '—'}</span>
         </Card>
         <Card className="p-5 flex flex-col gap-1 shadow-sm">
-          <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">{t('admin.stats.needRecheck')}</span>
-          <span className="text-3xl font-extrabold text-amber-600 dark:text-amber-500">{stats?.needRecheck ?? '—'}</span>
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('admin.stats.needRecheck')}</span>
+          <span className="text-2xl font-extrabold text-amber-600 dark:text-amber-500">{stats?.needRecheck ?? '—'}</span>
         </Card>
         <Card className="p-5 flex flex-col gap-1 shadow-sm">
-          <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">{t('admin.stats.todayEstimate')}</span>
-          <span className="text-3xl font-extrabold text-primary">+{stats?.totalClicks ?? 0}</span>
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Page Views</span>
+          <span className="text-2xl font-extrabold text-blue-600">{stats?.pageViews ?? '—'}</span>
+        </Card>
+        <Card className="p-5 flex flex-col gap-1 shadow-sm">
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Product Views</span>
+          <span className="text-2xl font-extrabold text-purple-600">{stats?.productViews ?? '—'}</span>
+        </Card>
+        <Card className="p-5 flex flex-col gap-1 shadow-sm">
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Total Clicks</span>
+          <span className="text-2xl font-extrabold text-primary">{stats?.totalClicks ?? '—'}</span>
         </Card>
       </div>
 

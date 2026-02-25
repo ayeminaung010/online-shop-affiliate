@@ -8,6 +8,7 @@ import { ArrowLeft, ExternalLink, Image as ImageIcon, ShieldCheck } from 'lucide
 import { t } from '@/lib/i18n';
 import { readProduct } from '@/lib/store';
 import { notFound } from 'next/navigation';
+import ProductTracker from '@/components/ProductTracker';
 
 // ISR: revalidate every 120 seconds
 export const revalidate = 120;
@@ -53,6 +54,8 @@ export default async function ProductDetailPage({ params }) {
 
     return (
         <main className="w-full max-w-4xl mx-auto px-4 py-4 md:py-8">
+            <ProductTracker productId={product.id} platform={product.platform} />
+
             {/* Back */}
             <Link href="/">
                 <Button variant="ghost" className="mb-4 min-h-[44px] -ml-2">

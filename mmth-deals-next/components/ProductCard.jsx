@@ -15,7 +15,7 @@ const ProductCard = memo(function ProductCard({ p }) {
 
   return (
     <Card className="flex flex-col overflow-hidden rounded-xl hover:-translate-y-1 hover:shadow-lg transition-all duration-200 border-border hover:border-primary">
-      <Link href={`/products/${p.id}`} className="cursor-pointer" data-umami-event="click-product" data-umami-event-product={p.title}>
+      <Link href={`/products/${p.id}`} className="cursor-pointer">
         <div className="relative w-full aspect-square bg-muted">
           {p.imageUrl ? (
             <Image
@@ -48,7 +48,7 @@ const ProductCard = memo(function ProductCard({ p }) {
           <span className="text-muted-foreground text-[10px] sm:text-xs font-semibold uppercase tracking-wide truncate">{p.category}</span>
         </div>
 
-        <Link href={`/products/${p.id}`} className="hover:text-primary transition-colors" data-umami-event="click-product" data-umami-event-product={p.title}>
+        <Link href={`/products/${p.id}`} className="hover:text-primary transition-colors">
           <h2 className="font-semibold text-sm sm:text-base leading-snug line-clamp-2 min-h-[2.5rem] m-0">{p.title}</h2>
         </Link>
 
@@ -66,7 +66,7 @@ const ProductCard = memo(function ProductCard({ p }) {
         </div>
 
         <Button asChild className="w-full mt-1 font-semibold shadow-sm hover:shadow-md transition-all bg-primary min-h-[40px] sm:min-h-[44px] text-xs sm:text-sm">
-          <a href={`/go/${p.id}?source=tiktok-bio`} target="_blank" rel="noopener noreferrer" data-umami-event="click-deal" data-umami-event-product={p.title}>
+          <a href={`/go/${p.id}?source=tiktok-bio`} target="_blank" rel="noopener noreferrer">
             {t('product.viewDeal')}
             <ExternalLink className="ml-1.5 w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </a>

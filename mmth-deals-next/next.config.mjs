@@ -43,11 +43,11 @@ const nextConfig = {
             value: [
               "default-src 'self'",
               // Allow unsafe-eval in development for webpack hot reload
-              `script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval' " : ''}https://cloud.umami.is https://*.supabase.co`,
+              `script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval' " : ''}https://*.supabase.co https://www.googletagmanager.com https://www.google-analytics.com`,
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' blob: data: https://*.shopee.co.th https://*.lazada.co.th https://*.shopee.com https://*.lazada.com https://*.lazcdn.com https://*.slatic.net https://*.susercontent.com https://*.shopee.sg",
+              "img-src 'self' blob: data: https://*.shopee.co.th https://*.lazada.co.th https://*.shopee.com https://*.lazada.com https://*.lazcdn.com https://*.slatic.net https://*.susercontent.com https://*.shopee.sg https://www.google-analytics.com https://www.googletagmanager.com",
               "font-src 'self' data:",
-              "connect-src 'self' https://cloud.umami.is https://*.supabase.co https://*.shopee.co.th https://*.lazada.co.th https://*.shopee.com https://*.lazada.com https://*.lazcdn.com https://*.slatic.net https://*.susercontent.com",
+              "connect-src 'self' https://*.supabase.co https://*.shopee.co.th https://*.lazada.co.th https://*.shopee.com https://*.lazada.com https://*.lazcdn.com https://*.slatic.net https://*.susercontent.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
               "frame-src 'self'",
               "object-src 'none'",
               "base-uri 'self'",

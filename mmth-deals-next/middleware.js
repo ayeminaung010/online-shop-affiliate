@@ -7,7 +7,7 @@ import { applyRateLimit } from '@/lib/rate-limit';
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
-  
+
   // Skip rate limiting for static assets and public files
   if (
     pathname.startsWith('/_next/static') ||
@@ -17,7 +17,22 @@ export function middleware(request) {
   ) {
     return NextResponse.next();
   }
-  
+
+  // Intercept TikTok in-app browser for affiliate links
+  if (pathname.startsWith('/go/')) {
+    const userAgent = request.headers.get('user-agent') || '';
+    const isTikTok = userAgent.toLowerCase().includes('tiktok') || userAgent.toLowerCase().includes('bytedance');
+
+    if (isTikTok) {
+      // Extract the target ID and rewrite to our specific instructions page
+      const id = pathname.substring(4); // removes '/go/' string
+      const url = request.nextUrl.clone();
+      url.pathname = '/open-in-browser';
+      url.searchParams.set('id', id);
+      return NextResponse.rewrite(url);
+    }
+  }
+
   // Apply rate limiting to API routes
   if (pathname.startsWith('/api/')) {
     // Login endpoint: stricter limits
@@ -26,7 +41,7 @@ export function middleware(request) {
       if (rateLimitResponse) {
         return rateLimitResponse;
       }
-    } 
+    }
     // Click/redirect endpoints
     else if (pathname.startsWith('/api/clicks') || pathname.startsWith('/go/')) {
       const rateLimitResponse = applyRateLimit(request, 'redirect');
@@ -42,7 +57,7 @@ export function middleware(request) {
       }
     }
   }
-  
+
   // Continue to next middleware/route
   return NextResponse.next();
 }

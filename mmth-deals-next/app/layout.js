@@ -47,15 +47,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="my" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
-        {process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
-          <Script
-            defer
-            src="https://cloud.umami.is/script.js"
-            data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
-            strategy="afterInteractive"
-          />
-        )}
+      <head>
         {/* Google tag (gtag.js) */}
         <Script
           strategy="afterInteractive"
@@ -73,6 +65,16 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+      </head>
+      <body className={inter.className} suppressHydrationWarning>
+        {process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
+          <Script
+            defer
+            src="https://cloud.umami.is/script.js"
+            data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+            strategy="afterInteractive"
+          />
+        )}
         <SiteHeader />
         <PageTracker />
         {children}

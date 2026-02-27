@@ -24,7 +24,7 @@ export default async function OpenInBrowserPage({ searchParams }) {
         <div className="min-h-[100dvh] bg-[#0f1014] text-white flex flex-col items-center pt-16 px-6 relative overflow-hidden font-sans">
             {/* Bouncing Arrow Pointing Top-Right */}
             <div className="absolute top-6 right-6 text-6xl animate-bounce text-pink-500 z-10 drop-shadow-lg" style={{ animationDuration: '1s' }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="rotate-45">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="-rotate-45">
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                     <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>

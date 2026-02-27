@@ -2,18 +2,11 @@
 
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import HeaderSearch from '@/components/HeaderSearch';
 
 export default function SiteHeader() {
-    const pathname = usePathname();
-
-    if (pathname === '/open-in-browser') {
-        return null;
-    }
-
     return (
         <header className="w-full bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-50">
             <div className="w-full max-w-6xl mx-auto px-4 h-14 sm:h-16 flex items-center gap-2 sm:gap-3">

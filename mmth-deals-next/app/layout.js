@@ -4,6 +4,7 @@ import SiteHeader from '@/components/SiteHeader';
 import Chatbot from '@/components/Chatbot';
 import { validateEnv } from '@/lib/env';
 import Script from 'next/script';
+import { headers } from 'next/headers';
 import PageTracker from '@/components/PageTracker';
 
 // Validate environment variables at startup
@@ -45,6 +46,9 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
+  const headersList = headers();
+  const isTikTok = headersList.get('x-is-tiktok') === 'true';
+
   return (
     <html lang="my" suppressHydrationWarning>
       <head>
@@ -67,7 +71,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className={inter.className} suppressHydrationWarning>
-        <SiteHeader />
+        {!isTikTok && <SiteHeader />}
         <PageTracker />
         {children}
         <Chatbot />

@@ -32,7 +32,16 @@ export function middleware(request) {
     }
 
     url.pathname = '/open-in-browser';
-    return NextResponse.rewrite(url);
+
+    // Add custom header to request so server components know
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set('x-is-tiktok', 'true');
+
+    return NextResponse.rewrite(url, {
+      request: {
+        headers: requestHeaders,
+      }
+    });
   }
 
   // Apply rate limiting to API routes
@@ -61,7 +70,16 @@ export function middleware(request) {
   }
 
   // Continue to next middleware/route
-  return NextResponse.next();
+  const requestHeaders = new Headers(request.headers);
+  if (pathname.startsWith('/open-in-browser')) {
+    requestHeaders.set('x-is-tiktok', 'true');
+  }
+
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    }
+  });
 }
 
 export const config = {

@@ -18,19 +18,21 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  // Intercept TikTok in-app browser for affiliate links
-  if (pathname.startsWith('/go/')) {
-    const userAgent = request.headers.get('user-agent') || '';
-    const isTikTok = userAgent.toLowerCase().includes('tiktok') || userAgent.toLowerCase().includes('bytedance');
+  // Intercept TikTok in-app browser globally
+  const userAgent = request.headers.get('user-agent') || '';
+  const isTikTok = userAgent.toLowerCase().includes('tiktok') || userAgent.toLowerCase().includes('bytedance') || userAgent.toLowerCase().includes('trill');
 
-    if (isTikTok) {
-      // Extract the target ID and rewrite to our specific instructions page
-      const id = pathname.substring(4); // removes '/go/' string
-      const url = request.nextUrl.clone();
-      url.pathname = '/open-in-browser';
+  if (isTikTok && !pathname.startsWith('/open-in-browser') && !pathname.startsWith('/api/')) {
+    const url = request.nextUrl.clone();
+
+    // If it's a /go/ link, preserve the ID for the platform wording (optional but good for context)
+    if (pathname.startsWith('/go/')) {
+      const id = pathname.substring(4);
       url.searchParams.set('id', id);
-      return NextResponse.rewrite(url);
     }
+
+    url.pathname = '/open-in-browser';
+    return NextResponse.rewrite(url);
   }
 
   // Apply rate limiting to API routes

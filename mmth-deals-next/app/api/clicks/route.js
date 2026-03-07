@@ -18,7 +18,8 @@ export async function GET(request) {
         // Build query
         let query = supabase
             .from('click_logs')
-            .select('*, products(title, platform)', { count: 'exact' }) // Changed to LEFT JOIN since products can be null
+            .select('*, products(title, platform)', { count: 'exact' })
+            .neq('action_type', 'page_view') // Exclude slash-route page views
             .order('ts', { ascending: false })
             .range(from, to);
 

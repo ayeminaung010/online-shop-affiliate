@@ -88,8 +88,8 @@ export default function ClickLogsPage() {
                     </Button>
                 </Link>
                 <div>
-                    <h1 className="text-2xl font-extrabold text-foreground">Click Logs</h1>
-                    <p className="text-sm text-muted-foreground">ထုတ်ကုန်လင့်ခ် နှိပ်ခြင်း မှတ်တမ်း</p>
+                    <h1 className="text-2xl font-extrabold text-foreground">Product View &amp; Click Logs</h1>
+                    <p className="text-sm text-muted-foreground">ထုတ်ကုန် ကြည့်ရှုမှု နှင့် နှိပ်ခြင်း မှတ်တမ်း</p>
                 </div>
             </div>
 
@@ -159,17 +159,17 @@ export default function ClickLogsPage() {
                             {/* Type */}
                             <div className="hidden md:flex items-center">
                                 <Badge variant="secondary" className="text-[10px] uppercase min-w-[60px] justify-center text-center">
-                                    {log.actionType === 'page_view' ? 'Page' : log.actionType === 'product_view' ? 'View' : 'Click'}
+                                    {log.actionType === 'product_view' ? 'View' : 'Click'}
                                 </Badge>
                             </div>
 
                             {/* Product / Page Url */}
                             <div className="flex flex-col gap-0.5 min-w-0">
                                 <span className="font-semibold text-sm truncate">
-                                    {log.actionType === 'page_view' ? log.pageUrl || '—' : log.productTitle}
+                                    {log.productTitle}
                                 </span>
                                 <span className="text-xs text-muted-foreground md:hidden uppercase flex items-center gap-1">
-                                    <span className="font-bold text-primary">{log.actionType === 'page_view' ? 'PG' : log.actionType === 'product_view' ? 'VW' : 'CK'}</span>
+                                    <span className="font-bold text-primary">{log.actionType === 'product_view' ? 'VW' : 'CK'}</span>
                                     <span>·</span> {log.platform} <span>·</span> {log.source} <span>·</span> {parseUA(log.ua)} <span>·</span> {formatTime(log.ts)}
                                 </span>
                             </div>

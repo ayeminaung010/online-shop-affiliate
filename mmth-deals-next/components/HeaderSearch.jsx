@@ -13,9 +13,6 @@ export default function HeaderSearch() {
     const [expanded, setExpanded] = useState(false);
     const inputRef = useRef(null);
 
-    // Hide search on admin pages
-    if (pathname.startsWith('/admin')) return null;
-
     // Sync input with URL changes (e.g. back/forward navigation)
     useEffect(() => {
         setQuery(searchParams.get('q') || '');
@@ -49,6 +46,9 @@ export default function HeaderSearch() {
             inputRef.current.focus();
         }
     }, [expanded]);
+
+    // Hide search on admin pages (must be after all hooks)
+    if (pathname.startsWith('/admin')) return null;
 
     function handleClear() {
         setQuery('');
